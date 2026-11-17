@@ -1,6 +1,7 @@
 import express from "express"
 import bookingRoutes from "./routes/booking.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import encryptionRoutes from './routes/encryption.routes.js';
 import captchaRoutes from "./routes/captcha.routes.js";
 import session from 'express-session';
 import cors from "cors"
@@ -39,5 +40,6 @@ app.get('/', (req, res) => {
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/captcha', captchaRoutes);
+app.use('/api/encryption', encryptionRoutes);
 
 export default app

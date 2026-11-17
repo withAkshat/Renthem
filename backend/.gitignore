@@ -1,3 +1,7 @@
 node_modules
 .env
 package-lock.json
+
+
+# Private encryption key
+src/config/keys/private.pem

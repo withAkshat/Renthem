@@ -1,14 +1,30 @@
 import express from "express"
-import { login, register, getCurrentUser, logout     } from "../controllers/auth.controller.js";
+import { login, register, getCurrentUser, logout } from "../controllers/auth.controller.js";
+import {
+    decryptRequest,
+    encryptResponse
+} from '../middlewares/encryption.middleware.js';
 
 const router = express.Router();
 
-router.post('/register', register);
+router.post('/register', decryptRequest,
+    encryptResponse, register);
 
-router.post('/login', login);
+router.post('/login', decryptRequest,
+    encryptResponse, login);
 
-router.get('/me', getCurrentUser);
+router.post(
+    '/me',
+    decryptRequest,
+    encryptResponse,
+    getCurrentUser
+);
 
-router.post('/logout', logout);
+router.post(
+    '/logout',
+    decryptRequest,
+    encryptResponse,
+    logout
+);
 
 export default router;

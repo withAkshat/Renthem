@@ -4,17 +4,27 @@ import session from "express-session"
 
 export const register = (req, res) => {
 
-    console.log(req.body)
+    const {
+        fullname,
+        email,
+        password
+    } = req.decryptedData;
 
-    return;
+    log(req.decryptedData)
+
+    return res.json({
+        sucess: true,
+        data: {
+            fullname
+        }
+    });
 }
 
 
 // Dummy login
 export const login = (req, res) => {
 
-    const { email, password, captchaId, captchaAnswer } = req.body;
-
+    const { email, password, captchaId, captchaAnswer } = req.decryptedData;
     // Verify CAPTCHA
     const isCaptchaValid = verifyCaptcha(captchaId, captchaAnswer);
 
@@ -25,11 +35,31 @@ export const login = (req, res) => {
         });
     }
 
-    // Dummy credentials
+    let user;
+
     if (
-        email !== 'demo@renthem.com' ||
-        password !== 'Password123'
+        email === 'admin@renthem.com' &&
+        password === 'Admin@123'
     ) {
+        user = {
+            id: 'admin-101',
+            fullname: 'Admin',
+            email,
+            role: 'admin'
+        };
+    }
+    else if (
+        email === 'demo@renthem.com' &&
+        password === 'Password123'
+    ) {
+        user = {
+            id: 'user-101',
+            fullname: 'Demo User',
+            email,
+            role: 'user'
+        };
+    }
+    else {
         return res.status(401).json({
             success: false,
             message: 'Invalid email or password'
@@ -37,7 +67,8 @@ export const login = (req, res) => {
     }
 
     // Regenerate session ID after login    
-    req.session.regenerate((error) => {
+    req.session.regenerate(
+        (error) => {
 
         if (error) {
             return res.status(500).json({
@@ -46,12 +77,7 @@ export const login = (req, res) => {
             });
         }
 
-        req.session.user = {
-            id: 'user-101',
-            fullname: 'Demo User',
-            email: 'demo@renthem.com',
-            role: 'user'
-        };
+       req.session.user = user;
 
         req.session.save((error) => {
 
@@ -68,7 +94,10 @@ export const login = (req, res) => {
                 user: req.session.user
             });
         });
-    });
+    }
+);
+
+    
 };
 
 

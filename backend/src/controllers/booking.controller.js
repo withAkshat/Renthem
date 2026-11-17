@@ -39,7 +39,6 @@ import {
 export const createBooking = async (req, res) => {
 
     try {
-
         const {
             fullname,
             email,
@@ -55,10 +54,9 @@ export const createBooking = async (req, res) => {
             photography,
             budget,
             requirements
-        } = req.body;
+        } = req.decryptedData;
 
-        // Required field validation
-
+        
         if (
             !fullname?.trim() ||
             !email?.trim() ||
